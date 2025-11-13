@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include<conio.h>
+#include <conio.h>
 #include <stdlib.h>
 #ifdef _WIN32
 #include <windows.h>
@@ -31,10 +31,11 @@ int main()
 #endif
     int player = 1, box, flag = 0, status = 0;
     char mark;
-    game_mode(0);
+    int choice = game_mode(0);
     while (1)
     {
         print_board(status);
+        printf("choice: %d\n", choice);
         mark = player == 1 ? 'X' : 'O';
         if (flag)
             printf("\033[1;35mInvalid input by Player %d\n\tEnter again.\033[0m\n", player);
@@ -46,7 +47,8 @@ int main()
         printf("\033[0m\033[1m, enter position (1-9): ");
         if (scanf("%d", &box) != 1) // char validation
         {
-            while (getchar() != '\n');
+            while (getchar() != '\n')
+                ;
             flag = 1;
             continue;
         }
@@ -94,7 +96,8 @@ int main()
                 return 0;
         }
         flag = 0;
-        while (getchar() != '\n'); // float validation
+        while (getchar() != '\n')
+            ; // float validation
         player = player == 1 ? 2 : 1;
     }
     return 0;
@@ -176,7 +179,8 @@ int check_win()
     return 0; // continue as normal
 }
 
-int game_mode(int choice) {
+int game_mode(int choice)
+{
 #ifdef _WIN32
     system("cls");
 #else
@@ -184,18 +188,27 @@ int game_mode(int choice) {
 #endif
     printf("\033[1mUse arrow-keys to select\n");
     if (!choice)
-    printf("\033[4;34m>");
+        printf("\033[4;34m>");
     printf("Regular 3x3\033[0m\n");
     if (choice)
-    printf("\033[4;34m>");
+        printf("\033[4;34m>");
     printf("\033[1mSuper mode\033[0m\n");
     printf("\033[1mPress Enter to confirm your choice\n");
     char ch = getch();
-    if (ch == 0 || ch == -32){
+    if (ch == 0 || ch == -32)
+    {
         ch = getch();
-        if (ch == 'P') game_mode(1);
-        else game_mode(0);
-    } else if (ch == '\n') return choice;
+        if (ch == 'P')
+            game_mode(1);
+        else if (ch == 'H')
+            game_mode(0);
+        else
+            game_mode(choice);
+    }
+    else if (ch == '\n' || ch == '\r')
+        return choice;
+    else
+        game_mode(choice);
 }
 
 /*
