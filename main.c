@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include<conio.h>
 #include <stdlib.h>
 #ifdef _WIN32
 #include <windows.h>
@@ -21,6 +22,7 @@ int win_lines[8][3] = {
 
 void print_board(int status);
 int check_win();
+int game_mode(int);
 
 int main()
 {
@@ -29,6 +31,7 @@ int main()
 #endif
     int player = 1, box, flag = 0, status = 0;
     char mark;
+    game_mode(0);
     while (1)
     {
         print_board(status);
@@ -171,6 +174,28 @@ int check_win()
     if (filled_box == 9)
         return -1;
     return 0; // continue as normal
+}
+
+int game_mode(int choice) {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+    printf("\033[1mUse arrow-keys to select\n");
+    if (!choice)
+    printf("\033[4;34m>");
+    printf("Regular 3x3\033[0m\n");
+    if (choice)
+    printf("\033[4;34m>");
+    printf("\033[1mSuper mode\033[0m\n");
+    printf("\033[1mPress Enter to confirm your choice\n");
+    char ch = getch();
+    if (ch == 0 || ch == -32){
+        ch = getch();
+        if (ch == 'P') game_mode(1);
+        else game_mode(0);
+    } else if (ch == '\n') return choice;
 }
 
 /*
