@@ -1,8 +1,23 @@
 #include <stdio.h>
-#include <conio.h>
 #include <stdlib.h>
 #ifdef _WIN32
 #include <windows.h>
+#include <conio.h>
+#else
+#include <termios.h>
+#include <unistd.h>
+int getch(void)
+{
+    struct termios oldt, newt;
+    int ch;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO); // Turn off canonical mode and echo
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return ch;
+}
 #endif
 
 char board[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
@@ -82,6 +97,7 @@ int main()
 
             if (choice == 'y' || choice == 'Y')
             {
+                choice = game_mode(0);
                 for (int i = 0; i < 9; i++)
                     board[i] = '1' + i;
                 for (int i = 0; i < 3; i++)
@@ -195,7 +211,7 @@ int game_mode(int choice)
     printf("\033[1mSuper mode\033[0m\n");
     printf("\033[1mPress Enter to confirm your choice\n");
     char ch = getch();
-    if (ch == 0 || ch == -32)
+    if (ch == 0 || ch == -32 || ch == 27)
     {
         ch = getch();
         if (ch == 'P')
