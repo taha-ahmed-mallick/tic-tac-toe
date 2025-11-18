@@ -241,8 +241,33 @@ char get_keys(void)
 #endif
         ch = getch();
         printf("%c", ch);
+        switch (ch)
+        {
+        case 'H':
+        case 'A':
+            return 'U';
+            break;
+        case 'P':
+        case 'B':
+            return 'D';
+            break;
+        case 'M':
+        case 'C':
+            return 'R';
+            break;
+        case 'K':
+        case 'D':
+            return 'L';
+            break;
+        default:
+            break;
+        }
         return ch;
     }
+    if (ch == '\n' || ch == '\r')
+        return 'E';
+    if (ch == '\t')
+        return 'T';
 }
 
 /*
