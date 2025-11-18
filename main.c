@@ -198,37 +198,38 @@ int check_win(void)
 
 int game_mode(int choice)
 {
-    if (choice > 2)
-        choice = 2;
-    else if (choice < 0)
-        choice = 0;
+    while (1)
+    {
 #ifdef _WIN32
-    system("cls");
+        system("cls");
 #else
-    system("clear");
+        system("clear");
 #endif
-    printf("\033[1mUse arrow-keys to select\n");
-    if (!choice)
-        printf("\033[4;34m>");
-    printf("Regular 3x3\033[0m\n");
-    if (choice == 1)
-        printf("\033[4;34m>");
-    printf("\033[1mSuper mode\033[0m\n");
-    if (choice == 2)
-        printf("\033[4;31m>");
-    printf("\033[1;31mExit\033[0m\n");
-    printf("\033[1mPress Enter to confirm your choice\n");
-    char ch = get_keys();
-    if (ch == 'U')
-        game_mode(--choice);
-    else if (ch == 'D')
-        game_mode(++choice);
-    else if (ch == 'E')
-        return choice;
-    else if (ch > '0' && ch < '4')
-        game_mode(ch - '1');
-    else
-        game_mode(choice);
+        printf("\033[1mUse arrow-keys to select\n");
+        if (!choice)
+            printf("\033[4;34m>");
+        printf("Regular 3x3\033[0m\n");
+        if (choice == 1)
+            printf("\033[4;34m>");
+        printf("\033[1mSuper mode\033[0m\n");
+        if (choice == 2)
+            printf("\033[4;31m>");
+        printf("\033[1;31mExit\033[0m\n");
+        printf("\033[1mPress Enter to confirm your choice\n");
+        char ch = get_keys();
+        if (ch == 'U')
+            --choice;
+        else if (ch == 'D')
+            ++choice;
+        else if (ch == 'E')
+            return choice;
+        else if (ch > '0' && ch < '4')
+            choice = ch - '1';
+        if (choice == 3)
+            choice = 2;
+        else if (choice == -1)
+            choice = 0;
+    }
 }
 
 char get_keys(void)
