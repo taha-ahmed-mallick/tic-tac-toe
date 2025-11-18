@@ -28,6 +28,23 @@ char get_keys(void)
 #endif
         ch = getch();
         printf("%c", ch);
+        switch (ch)
+        {
+        case 'H':
+        case 'A': printf("->U\n");
+            break;
+        case 'P':
+        case 'B': printf("->D\n");
+            break;
+        case 'M':
+        case 'C': printf("->R\n");
+            break;
+        case 'K':
+        case 'D': printf("->L\n");
+            break;
+        default:
+            break;
+        }
         return ch;
     }
     printf("\n...%c", ch);
