@@ -31,23 +31,31 @@ char get_keys(void)
         switch (ch)
         {
         case 'H':
-        case 'A': printf("->U\n");
+        case 'A':
+            printf("->U\n");
             break;
         case 'P':
-        case 'B': printf("->D\n");
+        case 'B':
+            printf("->D\n");
             break;
         case 'M':
-        case 'C': printf("->R\n");
+        case 'C':
+            printf("->R\n");
             break;
         case 'K':
-        case 'D': printf("->L\n");
+        case 'D':
+            printf("->L\n");
             break;
         default:
             break;
         }
         return ch;
     }
-    printf("\n...%c", ch);
+    printf("...%c", ch);
+    if (ch == '\n' || ch == '\r')
+        printf("->E\n");
+    else if (ch == '\t')
+        printf("->T\n");
 }
 
 int main()
