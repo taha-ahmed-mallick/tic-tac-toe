@@ -198,8 +198,10 @@ int check_win(void)
 
 int game_mode(int choice)
 {
-    if (choice > 2) choice = 2;
-    else if (choice < 0) choice = 0;
+    if (choice > 2)
+        choice = 2;
+    else if (choice < 0)
+        choice = 0;
 #ifdef _WIN32
     system("cls");
 #else
@@ -223,6 +225,8 @@ int game_mode(int choice)
         game_mode(++choice);
     else if (ch == 'E')
         return choice;
+    else if (ch > '0' && ch < '4')
+        game_mode(ch - '1');
     else
         game_mode(choice);
 }
