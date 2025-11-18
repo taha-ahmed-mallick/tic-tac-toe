@@ -198,6 +198,8 @@ int check_win(void)
 
 int game_mode(int choice)
 {
+    if (choice > 2) choice = 2;
+    else if (choice < 0) choice = 0;
 #ifdef _WIN32
     system("cls");
 #else
@@ -207,15 +209,18 @@ int game_mode(int choice)
     if (!choice)
         printf("\033[4;34m>");
     printf("Regular 3x3\033[0m\n");
-    if (choice)
+    if (choice == 1)
         printf("\033[4;34m>");
     printf("\033[1mSuper mode\033[0m\n");
+    if (choice == 2)
+        printf("\033[4;31m>");
+    printf("\033[1;31mExit\033[0m\n");
     printf("\033[1mPress Enter to confirm your choice\n");
     char ch = get_keys();
     if (ch == 'U')
-        game_mode(0);
+        game_mode(--choice);
     else if (ch == 'D')
-        game_mode(1);
+        game_mode(++choice);
     else if (ch == 'E')
         return choice;
     else
