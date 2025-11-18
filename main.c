@@ -211,21 +211,12 @@ int game_mode(int choice)
         printf("\033[4;34m>");
     printf("\033[1mSuper mode\033[0m\n");
     printf("\033[1mPress Enter to confirm your choice\n");
-    char ch = getch();
-    if (ch == 0 || ch == -32 || ch == 27)
-    {
-#ifdef __linux__
-        getch();
-#endif
-        ch = getch();
-        if (ch == 'P' || ch == 'B')
-            game_mode(1);
-        else if (ch == 'H' || ch == 'A')
-            game_mode(0);
-        else
-            game_mode(choice);
-    }
-    else if (ch == '\n' || ch == '\r')
+    char ch = get_keys();
+    if (ch == 'U')
+        game_mode(0);
+    else if (ch == 'D')
+        game_mode(1);
+    else if (ch == 'E')
         return choice;
     else
         game_mode(choice);
@@ -240,7 +231,6 @@ char get_keys(void)
         getch();
 #endif
         ch = getch();
-        printf("%c", ch);
         switch (ch)
         {
         case 'H':
@@ -262,12 +252,12 @@ char get_keys(void)
         default:
             break;
         }
-        return ch;
     }
     if (ch == '\n' || ch == '\r')
         return 'E';
     if (ch == '\t')
         return 'T';
+    return ch;
 }
 
 /*
