@@ -205,22 +205,22 @@ int game_mode(int choice)
 #else
         system("clear");
 #endif
-        printf("\033[1mUse arrow-keys to select\n");
+        printf("\033[1mUse arrow-keys or (1-3) to select:\n");
         if (!choice)
-            printf("\033[4;34m>");
+            printf("\033[4;34m> ");
         printf("Regular 3x3\033[0m\n");
         if (choice == 1)
-            printf("\033[4;34m>");
+            printf("\033[1;4;34m> ");
         printf("\033[1mSuper mode\033[0m\n");
         if (choice == 2)
-            printf("\033[4;31m>");
+            printf("\033[1;4;31m> ");
         printf("\033[1;31mExit\033[0m\n");
         printf("\033[1mPress Enter to confirm your choice\n");
         char ch = get_keys();
         if (ch == 'U')
-            --choice;
+            choice--;
         else if (ch == 'D')
-            ++choice;
+            choice++;
         else if (ch == 'E')
             return choice;
         else if (ch > '0' && ch < '4')
