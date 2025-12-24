@@ -183,18 +183,24 @@ void print_board(int status)
 #else
     system("clear");
 #endif
-    MOVE_CURSOR(1, 62); // width/2-18/2
+    MOVE_CURSOR(1, main_head);
     printf("\033[1;34m┌────────────────┐\n");
-    MOVE_CURSOR(2, 62);
+    MOVE_CURSOR(2, main_head);
     printf("│TIC TAC TOE GAME│\n");
-    MOVE_CURSOR(3, 62);
+    MOVE_CURSOR(3, main_head);
     printf("└────────────────┘\033[0m\n");
-    MOVE_CURSOR(4, 31); //(width-40)/2-20
+    MOVE_CURSOR(4, mini_board);
     printf("\033[1;39m┌──────────┐\n");
-    MOVE_CURSOR(5, 31);
+    MOVE_CURSOR(5, mini_board);
     printf("│INNER GAME│\n");
-    MOVE_CURSOR(6, 31);
+    MOVE_CURSOR(6, mini_board);
     printf("└──────────┘\033[0m\n");
+    MOVE_CURSOR(4, super_board);
+    printf("\033[1;39m┌───────────┐\n");
+    MOVE_CURSOR(5, super_board);
+    printf("│SUPER BOARD│\n");
+    MOVE_CURSOR(6, super_board);
+    printf("└───────────┘\033[0m\n");
     printf("\033[1mPlayer 1: \033[1;31mX (RED)\033[0m");
     printf("\n\033[1mPlayer 2: \033[1;32mO (Green)\033[0m\n\n");
     for (int i = 0; i < 3; i++)
