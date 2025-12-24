@@ -4,6 +4,7 @@
 #include <windows.h>
 #include <conio.h>
 #else
+#include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
 int getch(void)
@@ -19,6 +20,32 @@ int getch(void)
     return ch;
 }
 #endif
+
+int width, height;
+void getTerminalSize(int *width, int *height)
+{
+#ifdef _WIN32
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    *width = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+    *height = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+#else
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    *width = w.ws_col;
+    *height = w.ws_row;
+#endif
+    essentials();
+}
+#define MOVE_CURSOR(r, c) printf("\033[%d;%dH", r, c);
+
+int main_head, mini_board, super_board;
+void essentials(void)
+{
+    main_head = width / 2 - 9;
+    mini_board = width * 0.2;
+    super_board = mini_board + 20 + width * 0.4;
+}
 
 char board[9][9];
 int win_pos[] = {9, 9, 9};
@@ -40,16 +67,19 @@ int check_win(void);
 int game_mode(int);
 char get_keys(void);
 
-void init(void) {
+void init(void)
+{
     // board initialization
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
             board[i][j] = '1' + j;
 }
 
-void inner_gameplay(int game, int player, int status) {
+void inner_gameplay(int game, int player, int status)
+{
     int flag = 0, box;
-    while (1) {
+    while (1)
+    {
         print_board(status);
         char mark = player == 1 ? 'X' : 'O';
         if (flag)
@@ -62,11 +92,13 @@ void inner_gameplay(int game, int player, int status) {
         printf("\033[0m\033[1m, enter position (1-9): ");
         if (scanf("%d", &box) != 1) // char validation
         {
-            while (getchar() != '\n');
+            while (getchar() != '\n')
+                ;
             flag = 1;
             continue;
         }
-        while (getchar() != '\n'); // float validation
+        while (getchar() != '\n')
+            ;                                                        // float validation
         if (box < 1 || box > 9 || board[game][box - 1] != box + '0') // valid bounds + occupied box
         {
             flag = 1;
@@ -79,6 +111,12 @@ void inner_gameplay(int game, int player, int status) {
 
 int main(void)
 {
+    getTerminalSize(&width, &height);
+    if (width < 40)
+    {
+        printf("Too small of a screen size to play.");
+        return 0;
+    }
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
@@ -89,7 +127,13 @@ int main(void)
     while (1)
     {
         printf("choice: %d\n", choice);
-        inner_gameplay(0, player, status);
+        if (choice == 2)
+            return 0;
+        if (choice == 0)
+            inner_gameplay(0, player, status);
+        else
+        {
+        }
         status = check_win();
         if (status)
         {
@@ -139,11 +183,20 @@ void print_board(int status)
 #else
     system("clear");
 #endif
-    printf("\t\033[1;34m┌────────────────┐\n");
-    printf("\t│TIC TAC TOE GAME│\n");
-    printf("\t└────────────────┘\033[0m\n");
-    printf("\t\033[1mPlayer 1: \033[1;31mX (RED)\033[0m");
-    printf("\n\t\033[1mPlayer 2: \033[1;32mO (Green)\033[0m\n\n");
+    MOVE_CURSOR(1, 62); // width/2-18/2
+    printf("\033[1;34m┌────────────────┐\n");
+    MOVE_CURSOR(2, 62);
+    printf("│TIC TAC TOE GAME│\n");
+    MOVE_CURSOR(3, 62);
+    printf("└────────────────┘\033[0m\n");
+    MOVE_CURSOR(4, 31); //(width-40)/2-20
+    printf("\033[1;39m┌──────────┐\n");
+    MOVE_CURSOR(5, 31);
+    printf("│INNER GAME│\n");
+    MOVE_CURSOR(6, 31);
+    printf("└──────────┘\033[0m\n");
+    printf("\033[1mPlayer 1: \033[1;31mX (RED)\033[0m");
+    printf("\n\033[1mPlayer 2: \033[1;32mO (Green)\033[0m\n\n");
     for (int i = 0; i < 3; i++)
     {
         printf("\033[1m\n\t    ");
@@ -217,6 +270,7 @@ int game_mode(int choice)
 #else
         system("clear");
 #endif
+        printf("\033[1;30m=====LOG=====\nrow/col: %d/%d\nmain: %d\nmini: %d\nsuper: %d\n=====LOG=====\n\033[0m", width, height, main_head, mini_board, super_board);
         printf("\033[1mUse arrow-keys or (1-3) to select:\n");
         if (!choice)
             printf("\033[4;34m> ");
@@ -283,9 +337,9 @@ char get_keys(void)
 }
 
 /*
- 1 │ ◽ │ 3
+ X │ ◽ │ O
 ───┼───┼───
- 4 │ ☐ │ 6
+ = │ ☐ │ 6
 ───┼───┼───
  ⃞ │ ▣ │
 */
