@@ -44,7 +44,6 @@ void init(void) {
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
             board[i][j] = '1' + j;
-    board[0][0] = '1';
 }
 
 int main(void)
