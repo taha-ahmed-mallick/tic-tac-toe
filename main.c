@@ -35,7 +35,6 @@ void getTerminalSize(int *width, int *height)
     *width = w.ws_col;
     *height = w.ws_row;
 #endif
-    essentials();
 }
 #define MOVE_CURSOR(r, c) printf("\033[%d;%dH", r, c);
 
@@ -117,6 +116,7 @@ int main(void)
         printf("Too small of a screen size to play.");
         return 0;
     }
+    essentials();
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
@@ -205,7 +205,8 @@ void print_board(int status)
     printf("\n\033[1mPlayer 2: \033[1;32mO (Green)\033[0m\n\n");
     for (int i = 0; i < 3; i++)
     {
-        printf("\033[1m\n\t    ");
+        MOVE_CURSOR(i*2+7, mini_board+1);
+        printf("\033[1m");
         for (int j = 0; j < 3; j++)
         {
             char mark = board[0][j + i * 3];
@@ -220,7 +221,8 @@ void print_board(int status)
             printf("%c\033[0m\033[1m", mark);
             j != 2 ? printf(" │ ") : 0;
         }
-        i != 2 ? printf("\n\t   ───┼───┼───") : 0;
+        MOVE_CURSOR(i*2+8, mini_board);
+        i != 2 ? printf("───┼───┼───") : 0;
     }
     printf("\n\n");
     /*
