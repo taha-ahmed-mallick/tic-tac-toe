@@ -20,7 +20,7 @@ int getch(void)
 }
 #endif
 
-char board[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+char board[9][9];
 int win_pos[] = {9, 9, 9};
 int win_lines[8][3] = {
     {0, 1, 2}, // 1st row
@@ -33,10 +33,20 @@ int win_lines[8][3] = {
     {2, 4, 6}  // lft dig
 };
 
+void init(void);
 void print_board(int status);
 int check_win(void);
 int game_mode(int);
 char get_keys(void);
+
+void init(void) {
+    // board initialization
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++)
+            board[i][j] = '1' + j;
+    }
+    board[0][0] = '1';
+}
 
 int main(void)
 {
@@ -66,12 +76,12 @@ int main(void)
             flag = 1;
             continue;
         }
-        if (box < 1 || box > 9 || board[box - 1] != box + '0') // valid bounds + occupied box
+        if (box < 1 || box > 9 || board[0][box - 1] != box + '0') // valid bounds + occupied box
         {
             flag = 1;
             continue;
         }
-        board[box - 1] = mark;
+        board[0][box - 1] = mark;
         status = check_win();
         if (status)
         {
@@ -98,7 +108,7 @@ int main(void)
             {
                 choice = game_mode(0);
                 for (int i = 0; i < 9; i++)
-                    board[i] = '1' + i;
+                    board[0][i] = '1' + i;
                 for (int i = 0; i < 3; i++)
                     win_pos[i] = 9;
 
@@ -135,7 +145,7 @@ void print_board(int status)
         printf("\033[1m\n\t    ");
         for (int j = 0; j < 3; j++)
         {
-            char mark = board[j + i * 3];
+            char mark = board[0][j + i * 3];
             if (mark == 'X')
                 printf("\033[31m");
             else if (mark == 'O')
@@ -173,7 +183,7 @@ int check_win(void)
         int pos1 = win_lines[i][0];
         int pos2 = win_lines[i][1];
         int pos3 = win_lines[i][2];
-        if (board[pos1] == board[pos2] && board[pos2] == board[pos3])
+        if (board[0][pos1] == board[0][pos2] && board[0][pos2] == board[0][pos3])
         {
             win_pos[0] = pos1;
             win_pos[1] = pos2;
@@ -186,7 +196,7 @@ int check_win(void)
     int filled_box = 0;
     for (int i = 0; i < 9; i++)
     {
-        if (board[i] == 'X' || board[i] == 'O')
+        if (board[0][i] == 'X' || board[0][i] == 'O')
             filled_box++;
     }
     if (filled_box == 9)
