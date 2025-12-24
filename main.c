@@ -41,10 +41,9 @@ char get_keys(void);
 
 void init(void) {
     // board initialization
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
             board[i][j] = '1' + j;
-    }
     board[0][0] = '1';
 }
 
@@ -56,6 +55,7 @@ int main(void)
     int player = 1, box, flag = 0, status = 0;
     char mark;
     int choice = game_mode(0);
+    init();
     while (1)
     {
         print_board(status);
