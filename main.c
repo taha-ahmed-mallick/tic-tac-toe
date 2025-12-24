@@ -34,6 +34,7 @@ int win_lines[8][3] = {
 };
 
 void init(void);
+void inner_gameplay(int, int);
 void print_board(int status);
 int check_win(void);
 int game_mode(int);
@@ -44,6 +45,34 @@ void init(void) {
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
             board[i][j] = '1' + j;
+}
+
+void inner_gameplay(int game, int player) {
+    int flag = 0, box;
+    while (1) {
+        char mark = player == 1 ? 'X' : 'O';
+        if (flag)
+            printf("\033[1;35mInvalid input by Player %d\n\tEnter again.\033[0m\n", player);
+        printf("\033[1mPlayer %d ", player);
+        if (player == 1)
+            printf("\033[31m[X]");
+        else
+            printf("\033[32m[O]");
+        printf("\033[0m\033[1m, enter position (1-9): ");
+        if (scanf("%d", &box) != 1) // char validation
+        {
+            while (getchar() != '\n');
+            flag = 1;
+            continue;
+        }
+        if (box < 1 || box > 9 || board[game][box - 1] != box + '0') // valid bounds + occupied box
+        {
+            flag = 1;
+            continue;
+        }
+        board[game][box - 1] = mark;
+        break;
+    }
 }
 
 int main(void)
@@ -59,28 +88,7 @@ int main(void)
     {
         print_board(status);
         printf("choice: %d\n", choice);
-        mark = player == 1 ? 'X' : 'O';
-        if (flag)
-            printf("\033[1;35mInvalid input by Player %d\n\tEnter again.\033[0m\n", player);
-        printf("\033[1mPlayer %d ", player);
-        if (player == 1)
-            printf("\033[31m[X]");
-        else
-            printf("\033[32m[O]");
-        printf("\033[0m\033[1m, enter position (1-9): ");
-        if (scanf("%d", &box) != 1) // char validation
-        {
-            while (getchar() != '\n')
-                ;
-            flag = 1;
-            continue;
-        }
-        if (box < 1 || box > 9 || board[0][box - 1] != box + '0') // valid bounds + occupied box
-        {
-            flag = 1;
-            continue;
-        }
-        board[0][box - 1] = mark;
+        inner_gameplay(0, player);
         status = check_win();
         if (status)
         {
@@ -280,7 +288,7 @@ char get_keys(void)
 /*
  1 │ ◽ │ 3
 ───┼───┼───
- 4 │ ☐│ 6
+ 4 │ ☐ │ 6
 ───┼───┼───
  ⃞ │ ▣ │
 */
