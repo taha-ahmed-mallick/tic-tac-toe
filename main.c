@@ -34,7 +34,7 @@ int win_lines[8][3] = {
 };
 
 void init(void);
-void inner_gameplay(int, int);
+void inner_gameplay(int, int, int);
 void print_board(int status);
 int check_win(void);
 int game_mode(int);
@@ -47,9 +47,10 @@ void init(void) {
             board[i][j] = '1' + j;
 }
 
-void inner_gameplay(int game, int player) {
+void inner_gameplay(int game, int player, int status) {
     int flag = 0, box;
     while (1) {
+        print_board(status);
         char mark = player == 1 ? 'X' : 'O';
         if (flag)
             printf("\033[1;35mInvalid input by Player %d\n\tEnter again.\033[0m\n", player);
@@ -65,6 +66,7 @@ void inner_gameplay(int game, int player) {
             flag = 1;
             continue;
         }
+        while (getchar() != '\n'); // float validation
         if (box < 1 || box > 9 || board[game][box - 1] != box + '0') // valid bounds + occupied box
         {
             flag = 1;
@@ -80,15 +82,14 @@ int main(void)
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
-    int player = 1, box, flag = 0, status = 0;
+    int player = 1, status = 0;
     char mark;
     int choice = game_mode(0);
     init();
     while (1)
     {
-        print_board(status);
         printf("choice: %d\n", choice);
-        inner_gameplay(0, player);
+        inner_gameplay(0, player, status);
         status = check_win();
         if (status)
         {
@@ -121,15 +122,11 @@ int main(void)
 
                 player = 1;
                 status = 0;
-                flag = 0;
                 continue;
             }
             else
                 return 0;
         }
-        flag = 0;
-        while (getchar() != '\n')
-            ; // float validation
         player = player == 1 ? 2 : 1;
     }
     return 0;
