@@ -39,11 +39,29 @@ void getTerminalSize(int *width, int *height)
 #define MOVE_CURSOR(r, c) printf("\033[%d;%dH", r, c);
 
 int main_head, mini_board, super_board;
-void essentials(void)
+int essentials(void)
 {
+    if (width < 40)
+    {
+        printf("Too small of a screen size to play.");
+        return 0;
+    }
+    int board_width = 12;
+
     main_head = width / 2 - 9;
+    if (main_head < 20)
+        main_head = 20;
+    printf("%d  ", main_head);
+    if (width >= 60) {
+        printf("NORM LAW");
     mini_board = width * 0.2;
-    super_board = mini_board + 20 + width * 0.4;
+    super_board = mini_board + width * 0.4+5;
+    } else {
+        printf("ALT LAW");
+        mini_board = 2;
+        super_board = width - board_width -2;
+    }
+    return 1;
 }
 
 char board[9][9];
@@ -111,12 +129,8 @@ void inner_gameplay(int game, int player, int status)
 int main(void)
 {
     getTerminalSize(&width, &height);
-    if (width < 40)
-    {
-        printf("Too small of a screen size to play.");
+    if (!essentials())
         return 0;
-    }
-    essentials();
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
@@ -183,6 +197,8 @@ void print_board(int status)
 #else
     system("clear");
 #endif
+    printf("\033[1mPlayer 1: \033[1;31mX (RED)\033[0m");
+    printf("\n\033[1mPlayer 2: \033[1;32mO (Green)\033[0m\n\n");
     MOVE_CURSOR(1, main_head);
     printf("\033[1;34m┌────────────────┐\n");
     MOVE_CURSOR(2, main_head);
@@ -201,11 +217,9 @@ void print_board(int status)
     printf("│SUPER BOARD│\n");
     MOVE_CURSOR(6, super_board);
     printf("└───────────┘\033[0m\n");
-    printf("\033[1mPlayer 1: \033[1;31mX (RED)\033[0m");
-    printf("\n\033[1mPlayer 2: \033[1;32mO (Green)\033[0m\n\n");
     for (int i = 0; i < 3; i++)
     {
-        MOVE_CURSOR(i*2+7, mini_board+1);
+        MOVE_CURSOR(i * 2 + 7, mini_board + 1);
         printf("\033[1m");
         for (int j = 0; j < 3; j++)
         {
@@ -221,7 +235,7 @@ void print_board(int status)
             printf("%c\033[0m\033[1m", mark);
             j != 2 ? printf(" │ ") : 0;
         }
-        MOVE_CURSOR(i*2+8, mini_board);
+        MOVE_CURSOR(i * 2 + 8, mini_board);
         i != 2 ? printf("───┼───┼───") : 0;
     }
     printf("\n\n");
