@@ -52,14 +52,17 @@ int essentials(void)
     if (main_head < 20)
         main_head = 20;
     printf("%d  ", main_head);
-    if (width >= 60) {
+    if (width >= 60)
+    {
         printf("NORM LAW");
-    mini_board = width * 0.2;
-    super_board = mini_board + width * 0.4+5;
-    } else {
+        mini_board = width * 0.2;
+        super_board = mini_board + width * 0.4 + 5;
+    }
+    else
+    {
         printf("ALT LAW");
         mini_board = 2;
-        super_board = width - board_width -2;
+        super_board = width - board_width - 2;
     }
     return 1;
 }
@@ -199,24 +202,28 @@ void print_board(int status)
 #endif
     printf("\033[1mPlayer 1: \033[1;31mX (RED)\033[0m");
     printf("\n\033[1mPlayer 2: \033[1;32mO (Green)\033[0m\n\n");
+    
     MOVE_CURSOR(1, main_head);
     printf("\033[1;34m┌────────────────┐\n");
     MOVE_CURSOR(2, main_head);
     printf("│TIC TAC TOE GAME│\n");
     MOVE_CURSOR(3, main_head);
     printf("└────────────────┘\033[0m\n");
+
     MOVE_CURSOR(4, mini_board);
     printf("\033[1;39m┌──────────┐\n");
     MOVE_CURSOR(5, mini_board);
     printf("│INNER GAME│\n");
     MOVE_CURSOR(6, mini_board);
     printf("└──────────┘\033[0m\n");
+
     MOVE_CURSOR(4, super_board);
     printf("\033[1;39m┌───────────┐\n");
     MOVE_CURSOR(5, super_board);
     printf("│SUPER BOARD│\n");
     MOVE_CURSOR(6, super_board);
     printf("└───────────┘\033[0m\n");
+
     for (int i = 0; i < 3; i++)
     {
         MOVE_CURSOR(i * 2 + 7, mini_board + 1);
