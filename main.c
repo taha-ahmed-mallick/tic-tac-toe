@@ -68,7 +68,7 @@ int essentials(void)
 }
 
 char board[9][9];
-int win_pos[] = {9, 9, 9};
+int win_pos[] = {9, 9, 9}, current = 0;
 int win_lines[8][3] = {
     {0, 1, 2}, // 1st row
     {3, 4, 5}, // 2nd row
@@ -93,6 +93,12 @@ void init(void)
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
             board[i][j] = '1' + j;
+    board[1][0] = '_';
+    board[1][1] = 'X';
+    board[5][0] = '_';
+    board[5][1] = '=';
+    board[7][0] = '_';
+    board[7][1] = 'O';
 }
 
 void inner_gameplay(int game, int player, int status)
@@ -195,6 +201,7 @@ int main(void)
 
 void print_board(int status)
 {
+    int pos;
 #ifdef _WIN32
     system("cls");
 #else
@@ -202,7 +209,7 @@ void print_board(int status)
 #endif
     printf("\033[1mPlayer 1: \033[1;31mX (RED)\033[0m");
     printf("\n\033[1mPlayer 2: \033[1;32mO (Green)\033[0m\n\n");
-    
+
     MOVE_CURSOR(1, main_head);
     printf("\033[1;34m┌────────────────┐\n");
     MOVE_CURSOR(2, main_head);
@@ -211,11 +218,11 @@ void print_board(int status)
     printf("└────────────────┘\033[0m\n");
 
     MOVE_CURSOR(4, mini_board);
-    printf("\033[1;39m┌──────────┐\n");
+    printf("\033[1;39m┌───────────┐\n");
     MOVE_CURSOR(5, mini_board);
-    printf("│INNER GAME│\n");
+    printf("│INNER  GAME│\n");
     MOVE_CURSOR(6, mini_board);
-    printf("└──────────┘\033[0m\n");
+    printf("└───────────┘\033[0m\n");
 
     MOVE_CURSOR(4, super_board);
     printf("\033[1;39m┌───────────┐\n");
@@ -226,23 +233,67 @@ void print_board(int status)
 
     for (int i = 0; i < 3; i++)
     {
-        MOVE_CURSOR(i * 2 + 7, mini_board + 1);
+        MOVE_CURSOR(i * 2 + 7, mini_board + 2);
         printf("\033[1m");
         for (int j = 0; j < 3; j++)
         {
-            char mark = board[0][j + i * 3];
+            pos = j + i * 3;
+            char mark = board[0][pos];
             if (mark == 'X')
                 printf("\033[31m");
             else if (mark == 'O')
                 printf("\033[32m");
             if (status)
                 for (int k = 0; k < 3; k++)
-                    if (win_pos[k] == j + i * 3)
+                    if (win_pos[k] == pos)
                         printf("\033[4;34m");
             printf("%c\033[0m\033[1m", mark);
             j != 2 ? printf(" │ ") : 0;
         }
-        MOVE_CURSOR(i * 2 + 8, mini_board);
+        MOVE_CURSOR(i * 2 + 8, mini_board + 1);
+        i != 2 ? printf("───┼───┼───") : 0;
+    }
+
+    for (int i = 0; i < 3; i++)
+    {
+        MOVE_CURSOR(i * 2 + 7, super_board + 2);
+        printf("\033[1m");
+        for (int j = 0; j < 3; j++)
+        {
+            pos = j + i * 3;
+            char solved = board[pos][0], mark;
+            // setting the mark
+            if (solved == '_')
+            {
+                mark = board[pos][1]; // X, O, =
+            }
+            else
+                mark = '_';
+            if (pos == current)
+                mark = '\0';
+            // assigning color to it
+            if (mark == 'X')
+                printf("\033[31m");
+            else if (mark == 'O')
+                printf("\033[32m");
+            else if (mark == '=')
+                printf("\033[33m");
+            else if (mark == '\0')
+                printf("\033[36m");
+            else
+                printf("\033[35m"); // for under_score
+            
+            if (status)
+                for (int k = 0; k < 3; k++)
+                    if (win_pos[k] == pos)
+                        printf("\033[4;34m");
+            if (mark)
+                printf("%c\033[0m\033[1m", mark);
+            else
+                printf("■\033[0m\033[1m");
+            j != 2 ? printf(" │ ") : 0;
+        }
+        MOVE_CURSOR(i * 2 + 8, super_board + 1);
         i != 2 ? printf("───┼───┼───") : 0;
     }
     printf("\n\n");
