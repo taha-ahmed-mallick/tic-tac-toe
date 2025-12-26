@@ -215,7 +215,6 @@ void print_board(int status)
     printf("└────────────────┘\033[0m\n");
 
     if (active) printf("\033[35m");
-
     MOVE_CURSOR(4, mini_board);
     printf("\033[1m┌───────────┐\n");
     MOVE_CURSOR(5, mini_board);
@@ -224,7 +223,6 @@ void print_board(int status)
     printf("└───────────┘\033[0m\n");
 
     if (!active) printf("\033[35m");
-
     MOVE_CURSOR(4, super_board);
     printf("\033[1m┌───────────┐\n");
     MOVE_CURSOR(5, super_board);
