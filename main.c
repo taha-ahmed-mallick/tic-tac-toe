@@ -79,7 +79,8 @@ int win_lines[8][3] = {
 
 void init(void);
 void inner_gameplay(int, int, int);
-void print_board(int status);
+void regular_print(int);
+void print_board(int);
 int check_win(void);
 int game_mode(int);
 char get_keys(void);
@@ -196,6 +197,53 @@ int main(void)
     return 0;
 }
 
+void regular_print(int status)
+{
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+    printf("\t\033[1;34m┌────────────────┐\n");
+    printf("\t│TIC TAC TOE GAME│\n");
+    printf("\t└────────────────┘\033[0m\n");
+    printf("\t\033[1mPlayer 1: \033[1;31mX (RED)\033[0m");
+    printf("\n\t\033[1mPlayer 2: \033[1;32mO (Green)\033[0m\n\n");
+    for (int i = 0; i < 3; i++)
+    {
+        printf("\033[1m\n\t    ");
+        for (int j = 0; j < 3; j++)
+        {
+            char mark = board[j + i * 3];
+            if (mark == 'X')
+                printf("\033[31m");
+            else if (mark == 'O')
+                printf("\033[32m");
+            if (status)
+                for (int k = 0; k < 3; k++)
+                    if (win_pos[k] == j + i * 3)
+                        printf("\033[4;34m");
+            printf("%c\033[0m\033[1m", mark);
+            j != 2 ? printf(" │ ") : 0;
+        }
+        i != 2 ? printf("\n\t   ───┼───┼───") : 0;
+    }
+    printf("\n\n");
+    /*
+    i j -> n
+    0 0 -> 0
+    0 1 -> 1
+    0 2 -> 2
+    1 0 -> 3
+    1 1 -> 4
+    1 2 -> 5
+    2 0 -> 6
+    2 1 -> 7
+    2 2 -> 8
+    n = j + i*3
+    */
+}
+
 void print_board(int status)
 {
     int pos;
@@ -296,19 +344,6 @@ void print_board(int status)
         i != 2 ? printf("───┼───┼───") : 0;
     }
     printf("\n\n");
-    /*
-    i j -> n
-    0 0 -> 0
-    0 1 -> 1
-    0 2 -> 2
-    1 0 -> 3
-    1 1 -> 4
-    1 2 -> 5
-    2 0 -> 6
-    2 1 -> 7
-    2 2 -> 8
-    n = j + i*3
-    */
 }
 
 int check_win(void)
