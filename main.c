@@ -65,7 +65,7 @@ int essentials(void)
 }
 
 char board[9][9];
-int win_pos[] = {9, 9, 9}, current = 0, active = 1;
+int win_pos[] = {9, 9, 9}, current = 0, active = 0;
 int win_lines[8][3] = {
     {0, 1, 2}, // 1st row
     {3, 4, 5}, // 2nd row
@@ -91,12 +91,16 @@ void init(void)
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
             board[i][j] = '1' + j;
-    board[1][0] = '_';
-    board[1][1] = 'X';
+            // board[i][0] = '_';
+            // board[i][1] = 'X';
+    board[0][0] = '_';
+    board[0][1] = 'X';
     board[5][0] = '_';
     board[5][1] = '=';
-    board[7][0] = '_';
-    board[7][1] = 'O';
+    board[8][0] = '_';
+    board[8][1] = 'O';
+    board[4][5] = 'X';
+    board[3][1] = 'O';
 }
 
 void inner_gameplay(int game, int player, int status, int choice)
@@ -150,13 +154,53 @@ int main(void)
     init();
     while (1)
     {
-        printf("choice: %d\n", choice);
+        printf("mode: %d\n", choice);
         if (choice == 2)
             return 0;
-        if (choice == 0)
+        if (!choice)
             inner_gameplay(0, player, status, choice);
         else
         {
+            if (!active)
+            {
+            _extras:
+                while (board[current][0] == '_')
+                {
+                    current++;
+                    if (current == 9)
+                        break;
+                }
+            _start:
+                print_board(status);
+                printf("\033[1mPlayer %d ", player);
+                if (player == 1)
+                    printf("\033[31m[X]");
+                else
+                    printf("\033[32m[O]");
+                printf("\033[0m\033[1;36m, Press TAB to change the board and ENTER to select.\033[0m");
+                char key = get_keys();
+                if (key == 'T')
+                {
+                    current++;
+                    if (current == 9)
+                        current = 0;
+                    while (board[current][0] == '_')
+                    {
+                        current++;
+                        if (current == 9)
+                        {
+                            current = 0;
+                            break;
+                        }
+                    }
+                    goto _extras;
+                }
+                else if (key == 'E')
+                    active = 1;
+                else
+                    goto _start;
+            }
+            inner_gameplay(current, player, status, choice);
         }
         status = check_win();
         player = player == 1 ? 2 : 1;
@@ -254,7 +298,7 @@ void print_board(int status)
         for (int j = 0; j < 3; j++)
         {
             pos = j + i * 3;
-            char mark = board[0][pos];
+            char mark = board[current][pos];
             if (mark == 'X')
                 printf("\033[31m");
             else if (mark == 'O')
