@@ -78,7 +78,7 @@ int win_lines[8][3] = {
 };
 
 void init(void);
-void inner_gameplay(int, int, int);
+void inner_gameplay(int, int, int, int);
 void regular_print(int);
 void print_board(int);
 int check_win(void);
@@ -99,12 +99,15 @@ void init(void)
     board[7][1] = 'O';
 }
 
-void inner_gameplay(int game, int player, int status)
+void inner_gameplay(int game, int player, int status, int choice)
 {
     int flag = 0, box;
     while (1)
     {
-        print_board(status);
+        if (choice)
+            print_board(status);
+        else
+            regular_print(status);
         char mark = player == 1 ? 'X' : 'O';
         if (flag)
             printf("\033[1;35mInvalid input by Player %d\n\tEnter again.\033[0m\n", player);
@@ -151,7 +154,7 @@ int main(void)
         if (choice == 2)
             return 0;
         if (choice == 0)
-            inner_gameplay(0, player, status);
+            inner_gameplay(0, player, status, choice);
         else
         {
         }
@@ -214,7 +217,7 @@ void regular_print(int status)
         printf("\033[1m\n\t    ");
         for (int j = 0; j < 3; j++)
         {
-            char mark = board[j + i * 3];
+            char mark = board[0][j + i * 3];
             if (mark == 'X')
                 printf("\033[31m");
             else if (mark == 'O')
@@ -262,7 +265,8 @@ void print_board(int status)
     MOVE_CURSOR(3, main_head);
     printf("└────────────────┘\033[0m\n");
 
-    if (active) printf("\033[35m");
+    if (active)
+        printf("\033[35m");
     MOVE_CURSOR(4, mini_board);
     printf("\033[1m┌───────────┐\n");
     MOVE_CURSOR(5, mini_board);
@@ -270,7 +274,8 @@ void print_board(int status)
     MOVE_CURSOR(6, mini_board);
     printf("└───────────┘\033[0m\n");
 
-    if (!active) printf("\033[35m");
+    if (!active)
+        printf("\033[35m");
     MOVE_CURSOR(4, super_board);
     printf("\033[1m┌───────────┐\n");
     MOVE_CURSOR(5, super_board);
@@ -329,7 +334,7 @@ void print_board(int status)
                 printf("\033[36m");
             else
                 printf("\033[35m"); // for under_score
-            
+
             if (status)
                 for (int k = 0; k < 3; k++)
                     if (win_pos[k] == pos)
