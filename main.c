@@ -65,7 +65,7 @@ int essentials(void)
 }
 
 char board[9][9];
-int win_pos[] = {9, 9, 9}, current = 0;
+int win_pos[] = {9, 9, 9}, current = 0, active = 1;
 int win_lines[8][3] = {
     {0, 1, 2}, // 1st row
     {3, 4, 5}, // 2nd row
@@ -214,15 +214,19 @@ void print_board(int status)
     MOVE_CURSOR(3, main_head);
     printf("└────────────────┘\033[0m\n");
 
+    if (active) printf("\033[35m");
+
     MOVE_CURSOR(4, mini_board);
-    printf("\033[1;39m┌───────────┐\n");
+    printf("\033[1m┌───────────┐\n");
     MOVE_CURSOR(5, mini_board);
     printf("│INNER  GAME│\n");
     MOVE_CURSOR(6, mini_board);
     printf("└───────────┘\033[0m\n");
 
+    if (!active) printf("\033[35m");
+
     MOVE_CURSOR(4, super_board);
-    printf("\033[1;39m┌───────────┐\n");
+    printf("\033[1m┌───────────┐\n");
     MOVE_CURSOR(5, super_board);
     printf("│SUPER BOARD│\n");
     MOVE_CURSOR(6, super_board);
