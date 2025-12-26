@@ -21,24 +21,21 @@ int getch(void)
 }
 #endif
 
-int width, height;
-void getTerminalSize(int *width, int *height)
+void getTerminalSize(int *width)
 {
 #ifdef _WIN32
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
     *width = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-    *height = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 #else
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     *width = w.ws_col;
-    *height = w.ws_row;
 #endif
 }
 #define MOVE_CURSOR(r, c) printf("\033[%d;%dH", r, c);
 
-int main_head, mini_board, super_board;
+int main_head, mini_board, super_board, width;
 int essentials(void)
 {
     if (width < 40)
@@ -137,7 +134,7 @@ void inner_gameplay(int game, int player, int status)
 
 int main(void)
 {
-    getTerminalSize(&width, &height);
+    getTerminalSize(&width);
     if (!essentials())
         return 0;
 #ifdef _WIN32
@@ -350,7 +347,7 @@ int game_mode(int choice)
 #else
         system("clear");
 #endif
-        printf("\033[1;30m=====LOG=====\nrow/col: %d/%d\nmain: %d\nmini: %d\nsuper: %d\n=====LOG=====\n\033[0m", width, height, main_head, mini_board, super_board);
+        printf("\033[1;30m=====LOG=====\nrows: %d\nmain: %d\nmini: %d\nsuper: %d\n=====LOG=====\n\033[0m", width, main_head, mini_board, super_board);
         printf("\033[1mUse arrow-keys or (1-3) to select:\n");
         if (!choice)
             printf("\033[4;34m> ");
