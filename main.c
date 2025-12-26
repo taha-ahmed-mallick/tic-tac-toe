@@ -159,42 +159,6 @@ int main(void)
         {
         }
         status = check_win();
-        if (status)
-        {
-            print_board(status);
-            if (status == 1)
-            {
-                printf("\033[1;36m\tPlayer %d Wins!!\n", player);
-            }
-            else if (status == -1)
-            {
-                printf("\033[1;33m\tThis is a draw...\n");
-            }
-            printf("\033[0m");
-            char choice = 'y';
-            do
-            {
-                if (choice != 'y')
-                    printf("Enter valid input.\n");
-                printf("\nPlay again? (y/n): ");
-                scanf(" %c", &choice);
-            } while (choice != 'y' && choice != 'Y' && choice != 'n' && choice != 'N');
-
-            if (choice == 'y' || choice == 'Y')
-            {
-                choice = game_mode(0);
-                for (int i = 0; i < 9; i++)
-                    board[0][i] = '1' + i;
-                for (int i = 0; i < 3; i++)
-                    win_pos[i] = 9;
-
-                player = 1;
-                status = 0;
-                continue;
-            }
-            else
-                return 0;
-        }
         player = player == 1 ? 2 : 1;
     }
     return 0;
@@ -468,4 +432,43 @@ char get_keys(void)
  4 | █ │ ■
 ───┼───┼───
  ■ │ ▀ │ 9
+*/
+
+/*
+        if (status)
+        {
+            print_board(status);
+            if (status == 1)
+            {
+                printf("\033[1;36m\tPlayer %d Wins!!\n", player);
+            }
+            else if (status == -1)
+            {
+                printf("\033[1;33m\tThis is a draw...\n");
+            }
+            printf("\033[0m");
+            char choice = 'y';
+            do
+            {
+                if (choice != 'y')
+                    printf("Enter valid input.\n");
+                printf("\nPlay again? (y/n): ");
+                scanf(" %c", &choice);
+            } while (choice != 'y' && choice != 'Y' && choice != 'n' && choice != 'N');
+
+            if (choice == 'y' || choice == 'Y')
+            {
+                choice = game_mode(0);
+                for (int i = 0; i < 9; i++)
+                    board[0][i] = '1' + i;
+                for (int i = 0; i < 3; i++)
+                    win_pos[i] = 9;
+
+                player = 1;
+                status = 0;
+                continue;
+            }
+            else
+                return 0;
+        }
 */
