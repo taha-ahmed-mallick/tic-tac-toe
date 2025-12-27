@@ -177,7 +177,7 @@ int main(void)
                     printf("\033[31m[X]");
                 else
                     printf("\033[32m[O]");
-                printf("\033[0m\033[1;36m, Press TAB to change the board and ENTER to select.\033[0m");
+                printf("\033[0m\033[1;36m, Press (T)AB to change the board and ENTER to select.\033[0m");
                 char key = get_keys();
                 if (key == 'T')
                 {
