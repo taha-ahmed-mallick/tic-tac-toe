@@ -136,8 +136,7 @@ void inner_gameplay(int game, int player, int status, int choice)
             continue;
         }
         board[game][box - 1] = mark;
-        if (choice)
-            current = box - 1;
+        current = box - 1;
         break;
     }
 }
