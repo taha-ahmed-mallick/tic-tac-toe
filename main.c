@@ -268,34 +268,34 @@ void print_board(int status)
     printf("\033[1mPlayer 1: \033[1;31mX (RED)\033[0m");
     printf("\n\033[1mPlayer 2: \033[1;32mO (Green)\033[0m\n\n");
 
-    MOVE_CURSOR(1, main_head);
+    MOVE_CURSOR(1, main_head)
     printf("\033[1;34m┌────────────────┐\n");
-    MOVE_CURSOR(2, main_head);
+    MOVE_CURSOR(2, main_head)
     printf("│TIC TAC TOE GAME│\n");
-    MOVE_CURSOR(3, main_head);
+    MOVE_CURSOR(3, main_head)
     printf("└────────────────┘\033[0m\n");
 
     if (active)
         printf("\033[35m");
-    MOVE_CURSOR(4, mini_board);
+    MOVE_CURSOR(4, mini_board)
     printf("\033[1m┌───────────┐\n");
-    MOVE_CURSOR(5, mini_board);
+    MOVE_CURSOR(5, mini_board)
     printf("│INNER  GAME│\n");
-    MOVE_CURSOR(6, mini_board);
+    MOVE_CURSOR(6, mini_board)
     printf("└───────────┘\033[0m\n");
 
     if (!active)
         printf("\033[35m");
-    MOVE_CURSOR(4, super_board);
+    MOVE_CURSOR(4, super_board)
     printf("\033[1m┌───────────┐\n");
-    MOVE_CURSOR(5, super_board);
+    MOVE_CURSOR(5, super_board)
     printf("│SUPER BOARD│\n");
-    MOVE_CURSOR(6, super_board);
+    MOVE_CURSOR(6, super_board)
     printf("└───────────┘\033[0m\n");
 
     for (int i = 0; i < 3; i++)
     {
-        MOVE_CURSOR(i * 2 + 7, mini_board + 2);
+        MOVE_CURSOR(i * 2 + 7, mini_board + 2)
         printf("\033[1m");
         for (int j = 0; j < 3; j++)
         {
@@ -312,13 +312,13 @@ void print_board(int status)
             printf("%c\033[0m\033[1m", mark);
             j != 2 ? printf(" │ ") : 0;
         }
-        MOVE_CURSOR(i * 2 + 8, mini_board + 1);
+        MOVE_CURSOR(i * 2 + 8, mini_board + 1)
         i != 2 ? printf("───┼───┼───") : 0;
     }
 
     for (int i = 0; i < 3; i++)
     {
-        MOVE_CURSOR(i * 2 + 7, super_board + 2);
+        MOVE_CURSOR(i * 2 + 7, super_board + 2)
         printf("\033[1m");
         for (int j = 0; j < 3; j++)
         {
@@ -355,7 +355,7 @@ void print_board(int status)
                 printf("■\033[0m\033[1m");
             j != 2 ? printf(" │ ") : 0;
         }
-        MOVE_CURSOR(i * 2 + 8, super_board + 1);
+        MOVE_CURSOR(i * 2 + 8, super_board + 1)
         i != 2 ? printf("───┼───┼───") : 0;
     }
     printf("\n\n");
