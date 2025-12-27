@@ -91,8 +91,8 @@ void init(void)
     for (int i = 0; i < 9; i++)
         for (int j = 0; j < 9; j++)
             board[i][j] = '1' + j;
-            // board[i][0] = '_';
-            // board[i][1] = 'X';
+    // board[i][0] = '_';
+    // board[i][1] = 'X';
     board[0][0] = '_';
     board[0][1] = 'X';
     board[5][0] = '_';
@@ -136,6 +136,8 @@ void inner_gameplay(int game, int player, int status, int choice)
             continue;
         }
         board[game][box - 1] = mark;
+        if (choice)
+            current = box - 1;
         break;
     }
 }
