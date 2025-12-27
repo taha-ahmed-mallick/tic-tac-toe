@@ -150,7 +150,6 @@ int main(void)
     SetConsoleOutputCP(CP_UTF8);
 #endif
     int player = 1, status = 0;
-    char mark;
     int choice = game_mode(0);
     init();
     while (1)
